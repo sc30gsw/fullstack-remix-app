@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from '@remix-run/react'
 import { ReactNode } from 'react'
+import { tv } from 'tailwind-variants'
 import stylesheet from './app.css?url'
 
 export const links: LinksFunction = () => [
@@ -16,11 +17,15 @@ export const links: LinksFunction = () => [
 export const meta: MetaFunction = () => {
   return [
     {
-      title: 'fullstack remix app',
+      title: 'Fullstack remix app',
       description: 'A fullstack app for Remix',
     },
   ]
 }
+
+const layoutStyles = tv({
+  base: 'h-dvh w-full bg-yellow-100',
+})
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   return (
@@ -32,7 +37,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <Links />
       </head>
       <body>
-        {children}
+        <div className={layoutStyles()}>{children}</div>
         <ScrollRestoration />
         <Scripts />
       </body>
