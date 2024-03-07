@@ -1,8 +1,14 @@
-import { MetaFunction } from '@remix-run/node'
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from '@remix-run/node'
 import { Link } from '@remix-run/react'
 import { ValidatedForm } from 'remix-validated-form'
 import { tv } from 'tailwind-variants'
+import { GoogleForm } from '../components/GoogleForm'
 import { TextField } from '../components/TextField'
+import { authenticator } from '../services/auth.server'
 import { loginValidator } from '../types/validators/LoginValidator'
 
 export const meta: MetaFunction = () => {
@@ -22,30 +28,56 @@ const loginPageStyles = tv({
   compoundSlots: [{ slots: ['btnWrapper', 'btn'], class: 'w-full' }],
 })
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = await authenticator.isAuthenticated(request, {
+    successRedirect: '/',
+  })
+
+  return user
+}
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.clone().formData()
+  const action = String(formData.get('_action'))
+
+  switch (action) {
+    case 'Sign In':
+      return authenticator.authenticate('user-pass', request, {
+        successRedirect: '/',
+        failureRedirect: '/auth/login',
+      })
+
+    case 'Sign In Google':
+      return authenticator.authenticate('google', request)
+
+    default:
+      return null
+  }
+}
+
 const LoginPage = () => {
   const { base, form, title, btnWrapper, btn, text, link } = loginPageStyles()
 
   return (
     <div className={base()}>
-      <ValidatedForm
-        validator={loginValidator}
-        method="POST"
-        className={form()}
-      >
-        <h2 className={title()}>Login</h2>
-        <TextField htmlFor="email" label="Email" />
-        <TextField htmlFor="password" type="password" label="Password" />
-        <div className={btnWrapper()}>
-          <button
-            type="submit"
-            name="_action"
-            value="Sign In"
-            className={btn()}
-          >
-            Login
-          </button>
-        </div>
-      </ValidatedForm>
+      <div className={form()}>
+        <ValidatedForm validator={loginValidator} method="POST">
+          <h2 className={title()}>Login</h2>
+          <TextField htmlFor="email" label="Email" />
+          <TextField htmlFor="password" type="password" label="Password" />
+          <div className={btnWrapper()}>
+            <button
+              type="submit"
+              name="_action"
+              value="Sign In"
+              className={btn()}
+            >
+              Login
+            </button>
+          </div>
+        </ValidatedForm>
+        <GoogleForm />
+      </div>
       <p className={text()}>
         Don't have an account?
         <Link to="/auth/signup">
