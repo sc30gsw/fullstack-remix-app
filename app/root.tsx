@@ -5,9 +5,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteError,
 } from '@remix-run/react'
 import { ReactNode } from 'react'
+import { tv } from 'tailwind-variants'
 import stylesheet from './app.css?url'
+import { ErrorState } from './components/ErrorState'
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -16,13 +19,36 @@ export const links: LinksFunction = () => [
 export const meta: MetaFunction = () => {
   return [
     {
-      title: 'fullstack remix app',
+      title: 'Fullstack remix app',
       description: 'A fullstack app for Remix',
     },
   ]
 }
 
-export const Layout = ({ children }: { children: ReactNode }) => {
+export const ErrorBoundary = () => {
+  const error = useRouteError()
+
+  return (
+    <html lang="ja">
+      <head>
+        <title>エラーが発生しました</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <ErrorState error={error} />
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  )
+}
+
+const layoutStyles = tv({
+  base: 'h-dvh w-full bg-yellow-100',
+})
+
+export const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html lang="ja">
       <head>
@@ -32,7 +58,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <Links />
       </head>
       <body>
-        {children}
+        <div className={layoutStyles()}>{children}</div>
         <ScrollRestoration />
         <Scripts />
       </body>
