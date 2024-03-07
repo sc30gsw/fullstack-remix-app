@@ -16,13 +16,19 @@ const textFieldStyles = tv({
   },
 })
 
-type TextFieldProps = {
+type TextFieldProps = Readonly<{
   htmlFor: string
   label: string
   type?: ComponentProps<'input'>['type']
-}
+  errorMessage?: string
+}>
 
-export const TextField: FC<TextFieldProps> = ({ htmlFor, label, type }) => {
+export const TextField: FC<TextFieldProps> = ({
+  htmlFor,
+  label,
+  type,
+  errorMessage,
+}) => {
   const { error } = useField(htmlFor)
   const { base, labelSlot, textField, errMsg } = textFieldStyles({
     hasError: !!error,
@@ -35,6 +41,7 @@ export const TextField: FC<TextFieldProps> = ({ htmlFor, label, type }) => {
       </label>
       <input type={type} id={htmlFor} name={htmlFor} className={textField()} />
       {error && <span className={errMsg()}>{error}</span>}
+      {errorMessage && <span className={errMsg()}>{errorMessage}</span>}
     </div>
   )
 }
