@@ -1,4 +1,4 @@
-import { LinksFunction, MetaFunction } from '@remix-run/cloudflare'
+import { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
   Links,
   Meta,

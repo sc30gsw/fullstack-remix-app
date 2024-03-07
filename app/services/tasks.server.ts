@@ -1,5 +1,5 @@
 import { Category, Task } from '@prisma/client'
-import { json } from '@remix-run/cloudflare'
+import { json } from '@remix-run/node'
 import { prisma } from '../libs/db'
 
 export const getUserTasks = async (userId: string) => {

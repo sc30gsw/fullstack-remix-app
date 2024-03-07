@@ -1,3 +1,4 @@
+import React from 'react'
 import { useField } from 'remix-validated-form'
 import { tv } from 'tailwind-variants'
 import { categories } from '../utils/categories'

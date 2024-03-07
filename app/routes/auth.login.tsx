@@ -2,7 +2,7 @@ import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
-} from '@remix-run/cloudflare'
+} from '@remix-run/node'
 import { Link } from '@remix-run/react'
 import { ValidatedForm } from 'remix-validated-form'
 import { tv } from 'tailwind-variants'

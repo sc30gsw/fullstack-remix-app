@@ -31,8 +31,7 @@
         "postcss.config.js",
         "tailwind.config.ts",
         "root.tsx",
-        "./app/routes/*.tsx",
-        "./app/entry.*.tsx"
+        "./app/routes/*.tsx"
       ],
       "linter": {
         "rules": {
