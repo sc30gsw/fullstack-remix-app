@@ -1,7 +1,11 @@
-import { Link } from '@remix-run/react'
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node'
+import { Link, useActionData } from '@remix-run/react'
 import { ValidatedForm } from 'remix-validated-form'
 import { tv } from 'tailwind-variants'
+import { GoogleForm } from '../components/GoogleForm'
 import { TextField } from '../components/TextField'
+import { authenticator } from '../services/auth.server'
+import { createUser } from '../services/signup.server'
 import { signUpValidator } from '../types/validators/SignUpValidator'
 
 const signUpPageStyles = tv({
@@ -17,30 +21,93 @@ const signUpPageStyles = tv({
   compoundSlots: [{ slots: ['btnWrapper', 'btn'], class: 'w-full' }],
 })
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = await authenticator.isAuthenticated(request, {
+    successRedirect: '/',
+  })
+
+  return { user }
+}
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.clone().formData()
+  const action = String(formData.get('_action'))
+
+  switch (action) {
+    case 'Sign Up': {
+      const name = String(formData.get('name'))
+      const email = String(formData.get('email'))
+      const password = String(formData.get('password'))
+      const errors: { [key: string]: string } = {}
+
+      if (
+        typeof action !== 'string' ||
+        typeof name !== 'string' ||
+        typeof email !== 'string' ||
+        typeof password !== 'string'
+      ) {
+        return json(
+          { error: 'Invalid Form Data', form: action },
+          { status: 400 },
+        )
+      }
+
+      const result = await createUser({ name, email, password })
+
+      if (result.error) {
+        errors.email = result.error.message
+      }
+
+      if (Object.keys(errors).length > 0) {
+        return json({ errors })
+      }
+
+      return await authenticator.authenticate('user-pass', request, {
+        successRedirect: '/',
+        failureRedirect: '/auth/signup',
+        context: { formData },
+      })
+    }
+
+    case 'Sign In Google':
+      return authenticator.authenticate('google', request)
+
+    default:
+      return null
+  }
+}
+
 const SignUpPage = () => {
   const { base, form, title, btnWrapper, btn, text, link } = signUpPageStyles()
+
+  const actionData = useActionData<typeof action>()
+  const errors = (actionData as { errors?: { [key: string]: string } })?.errors
+
   return (
     <div className={base()}>
-      <ValidatedForm
-        validator={signUpValidator}
-        method="POST"
-        className={form()}
-      >
-        <h2 className={title()}>Create an account</h2>
-        <TextField htmlFor="name" type="name" label="Name" />
-        <TextField htmlFor="email" label="Email" />
-        <TextField htmlFor="password" type="password" label="Password" />
-        <div className={btnWrapper()}>
-          <button
-            type="submit"
-            name="_action"
-            value="Sign In"
-            className={btn()}
-          >
-            Create an account
-          </button>
-        </div>
-      </ValidatedForm>
+      <div className={form()}>
+        <ValidatedForm validator={signUpValidator} method="POST">
+          <h2 className={title()}>Create an account</h2>
+          <TextField htmlFor="name" type="name" label="Name" />
+          <TextField
+            htmlFor="email"
+            label="Email"
+            errorMessage={errors?.email}
+          />
+          <TextField htmlFor="password" type="password" label="Password" />
+          <div className={btnWrapper()}>
+            <button
+              type="submit"
+              name="_action"
+              value="Sign Up"
+              className={btn()}
+            >
+              Create an account
+            </button>
+          </div>
+        </ValidatedForm>
+        <GoogleForm />
+      </div>
       <p className={text()}>
         Already have an account?
         <Link to="/auth/login">
