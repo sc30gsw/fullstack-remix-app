@@ -1,4 +1,8 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node'
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+} from '@remix-run/cloudflare'
 import { Link, useActionData } from '@remix-run/react'
 import { ValidatedForm } from 'remix-validated-form'
 import { tv } from 'tailwind-variants'
@@ -65,7 +69,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       return await authenticator.authenticate('user-pass', request, {
         successRedirect: '/',
         failureRedirect: '/auth/signup',
-        context: { formData },
       })
     }
 
