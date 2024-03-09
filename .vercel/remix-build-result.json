@@ -1,0 +1,109 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs-eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "routes/api.auth.google.callback": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/auth.signup": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/auth.login": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "app/root.tsx",
+        "config": {}
+      },
+      "routes/api.auth.google.callback": {
+        "file": "app/routes/api.auth.google.callback.tsx",
+        "id": "routes/api.auth.google.callback",
+        "path": "api/auth/google/callback",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/auth.signup": {
+        "file": "app/routes/auth.signup.tsx",
+        "id": "routes/auth.signup",
+        "path": "auth/signup",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/auth.login": {
+        "file": "app/routes/auth.login.tsx",
+        "id": "routes/auth.login",
+        "path": "auth/login",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/_index": {
+        "file": "app/routes/_index.tsx",
+        "id": "routes/_index",
+        "index": true,
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    }
+  },
+  "remixConfig": {
+    "appDirectory": "/Users/kaitokaki/dev/learning/fullstack-remix-app/app",
+    "basename": "/",
+    "buildDirectory": "/Users/kaitokaki/dev/learning/fullstack-remix-app/build",
+    "future": {
+      "v3_fetcherPersist": false,
+      "v3_relativeSplatPath": false,
+      "v3_throwAbortReason": false
+    },
+    "manifest": false,
+    "publicPath": "/",
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "root.tsx"
+      },
+      "routes/api.auth.google.callback": {
+        "file": "routes/api.auth.google.callback.tsx",
+        "id": "routes/api.auth.google.callback",
+        "path": "api/auth/google/callback",
+        "parentId": "root"
+      },
+      "routes/auth.signup": {
+        "file": "routes/auth.signup.tsx",
+        "id": "routes/auth.signup",
+        "path": "auth/signup",
+        "parentId": "root"
+      },
+      "routes/auth.login": {
+        "file": "routes/auth.login.tsx",
+        "id": "routes/auth.login",
+        "path": "auth/login",
+        "parentId": "root"
+      },
+      "routes/_index": {
+        "file": "routes/_index.tsx",
+        "id": "routes/_index",
+        "index": true,
+        "parentId": "root"
+      }
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true
+  }
+}
